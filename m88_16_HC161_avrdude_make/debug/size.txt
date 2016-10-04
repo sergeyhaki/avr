@@ -1,0 +1,11 @@
+AVR Memory Usage
+----------------
+Device: atmega88
+
+Program:    4314 bytes (52.7% Full)
+(.text + .data + .bootloader)
+
+Data:        125 bytes (12.2% Full)
+(.data + .bss + .noinit)
+
+

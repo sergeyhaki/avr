@@ -25,8 +25,7 @@
 #include "hc161.c"
 
 //******PROGMEM*****************************************************
-uint8_t hello_msg[] PROGMEM = {"Hello..."};
-uint8_t buy_msg[] PROGMEM = {"Buy..."};
+
 
 //*****ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ*****************************************
 static FILE lcd_stdout = FDEV_SETUP_STREAM(lcd_putchar, NULL, _FDEV_SETUP_WRITE);
@@ -62,22 +61,25 @@ int main()
 {
 	//порты ввода-вывода
 	DDRB = (1<<PB0)|(1<<PB1)|(1<<PB2);	
-	PORTB |= (1<<PB0)|(1<<PB2);
+	PORTB |= (1<<PB0)|(1<<PB1)|(1<<PB2);
 	
 	//подтяжка INT0 INT1;	
 	PORTD |= (1<<PD2)|(1<<PD3);
 	
-	_delay_ms(100);
+	_delay_ms(1000);
 	
 	//инициализация HD77480
 	LCD_Init();	
 	stdout = &lcd_stdout;
-	LCD_pgm_text(hello_msg);
+	//LCD_pgm_text(hello_msg);
 	
 	//*****TIMER1  ctc mode output>OC1A*****
+	
+	/*
 	TCCR1A = (1<<COM1A0);		//изменять значение выхода при совпадении
 	TCCR1B = (1<<WGM12)|5;		//CTC mode - F_CPU/1024  
 	OCR1A = 15624;	 			// 1sec (16MHz)
+	*/
 	
 	//разрешение прерывания по совпадению А
 	//TIMSK1 = (1<<OCIE1A);
@@ -101,17 +103,28 @@ int main()
 	while(1)
 	{		
 		
-		for (uint16_t i = 0; i < 88; i++)
+		for (uint16_t i = 0; i < 6000; i++)
 		{		
-			_delay_ms(500);	
-			resetHC161();	
+			
+			_delay_ms(500);
+			PORTB |= (1<<PB1);
+			resetHC161();
+			TCNT0 = 0;
+			
 			_delay_ms(50);	
 			pulseHC161(i);	
 			_delay_ms(50);
 			
+			PORTB &= ~(1<<PB1);
+			pulseHC161(i);
+			_delay_ms(50);
+			
+			
+			
 			LCD_XY(0,0);
-			printf("i= %i   \n",i);
-			printf("HC161= %i   ",readHC161());
+			printf("i=%i ",i);
+			printf("T=%i \n",TCNT0);
+			printf("HC161=%i   ",readHC161());
 		}		
 	}//end while
 	

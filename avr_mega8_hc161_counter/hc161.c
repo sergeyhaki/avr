@@ -1,9 +1,10 @@
 void resetHC161(void)
 {	
 	PORTB &= ~(1<<PB0);
-	_delay_ms(10);
+	_delay_ms(100);
 	PORTB |= (1<<PB0);
-	_delay_ms(10);
+	_delay_ms(100);
+	
 }
 
 
@@ -18,10 +19,12 @@ void pulseHC161(uint16_t cnt)
 {
 	for (uint16_t i = 0; i < cnt; i++)
 	{
-		PORTB &= ~(1<<PB2);
+		
 		_delay_ms(10);
 		PORTB |= (1<<PB2);
-		_delay_ms(10);	
+		_delay_ms(10);
+		PORTB &= ~(1<<PB2);
+		
 	}
 }
 

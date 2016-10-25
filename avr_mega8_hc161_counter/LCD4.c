@@ -65,7 +65,7 @@
 
 	//вывод текста: аргумент - указатель на текст в 
 	//програмной памяти
-	void LCD_pgm_text(uint8_t *pointer)
+	void LCD_Text(char *pointer)
 	{
 		uint8_t i=0;
 		while(pgm_read_byte (&pointer[i]))
